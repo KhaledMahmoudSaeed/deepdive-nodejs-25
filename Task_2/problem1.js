@@ -1,5 +1,6 @@
 import fs from "fs";
 import { program } from "commander";
+import inquirer from "inquirer";
 
 program
   .name("Wirte in a file ")
@@ -20,5 +21,34 @@ program
         console.log(`Message written to ${filename}`);
       }
     });
+  });
+
+program.command("add").alias("a").description("Add a course");
+inquirer
+  .prompt([
+    {
+      type: "input",
+      name: "courseName",
+      message: "Enter the course name",
+    },
+    {
+      type: "input",
+      name: "courseDescription",
+      message: "Enter the course description",
+    },
+  ])
+  .then((answers) => {
+    const { courseName, courseDescription } = answers;
+    fs.appendFile(
+      "./courses.txt",
+      `Course Name: ${courseName}\nDescription: ${courseDescription}\n\n`,
+      (err) => {
+        if (err) {
+          console.error("Error writing to file:", err);
+        } else {
+          console.log("Course added successfully!");
+        }
+      }
+    );
   });
 program.parse();
